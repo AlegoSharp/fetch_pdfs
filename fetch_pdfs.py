@@ -22,7 +22,7 @@ departements = [
     "tarn", "tarn-et-garonne", "var", "vaucluse", "vendee",
     "vienne", "haute-vienne", "vosges", "yonne", "territoire de belfort",
     "essonne", "hauts-de-seine", "seine-saint-denis", "val-de-marne", "val-doise",
-    "guadeloupe", "martinique", "guyane", "la reunion", "mayotte"
+    "guadeloupe", "martinique", "guyane", "reunion", "mayotte"
 ]
 
 keywords = [
@@ -54,7 +54,7 @@ for departement in departements:
 
         if raa_url is not None and raa_url != "":
             status = "OK"
-        print(f'{departement};{status};{base_url}{raa_url}')
+    print(f'{departement};{status};{base_url}{raa_url}')
     #print(" ")
     #print(" ")
     #print("================================")
