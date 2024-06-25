@@ -17,15 +17,15 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install required Python packages
-RUN pip install --no-cache-dir \
-    requests \
-    beautifulsoup4
+
 
 # Copy the script to the container
-COPY fetch_pdfs.py /app/
+COPY . .
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r ./requirements.txt
 
 # Set the working directory
 WORKDIR /app
 
 # Run the script
-CMD ["python", "fetch_pdfs.py"]
+CMD ["python", "/app/fetch_raa_urls.py"]
