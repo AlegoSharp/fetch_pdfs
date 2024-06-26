@@ -1,9 +1,5 @@
-beautifulsoup4>=4.12.3
-dateparser>=1.2.0
-ftfy>=6.2.0
-Mastodon.py>=1.8.1
-pycodestyle>=2.11.1
-pypdf>=4.2.0
-PyVirtualDisplay>=3.0
-requests>=2.31.0
-selenium>=4.19.0
+beautifulsoup4
+dateparser
+pycodestyle
+requests
+flask

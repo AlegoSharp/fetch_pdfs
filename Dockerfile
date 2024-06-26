@@ -28,4 +28,4 @@ RUN pip install --no-cache-dir -r ./requirements.txt
 WORKDIR /app
 
 # Run the script
-CMD ["python", "/app/fetch_raa_urls.py"]
+CMD ["python", "/app/App.py"]

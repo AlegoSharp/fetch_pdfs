@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  path-tracker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - SLEEP_TIME=1                # Temps en secondes entre chaque requêtes
