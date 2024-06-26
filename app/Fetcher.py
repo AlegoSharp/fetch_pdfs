@@ -46,11 +46,11 @@ class Fetcher:
         data -- Un dictionnaire contenant les données à envoyer au site
         """
         try:
-            logger.debug(f'Chargement de la page {url}')
+            logger.warn(f'Chargement de la page {url}')
             if self.sleep_time > 0:
                 time.sleep(self.sleep_time)
 
-            self.session.headers.update({'User-Agent': "whatever"})
+            self.session.headers.update({'User-Agent': "bubububububu"})
 
             page = None
             if method == 'get':
