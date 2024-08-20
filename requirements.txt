@@ -3,3 +3,7 @@ dateparser
 pycodestyle
 requests
 flask
+pysocks
+psycopg2
+sqlalchemy
+PyPDF2

@@ -7,5 +7,31 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
+    volumes: 
+      - ./pdfs:/tmp
     environment:
       - SLEEP_TIME=1                # Temps en secondes entre chaque requêtes
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=postgres
+    depends_on:
+      - db
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    volumes: 
+      - ./db:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./dpts.sql:/docker-entrypoint-initdb.d/dpts.sql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
