@@ -2,7 +2,7 @@
 
 ## Backend
 
-It uses Python and Flask.
+Programe Python avec le framework Flask.
 
 ### App.py
 
@@ -29,6 +29,8 @@ Parser des pages HTML, c'est un wrapper autour de beautifullsoup
 L'UI du programme utilise les technologies web natives html, css, js, sans surcouches ni framework
 
 Le html est servie par l'API flask via template engine.
+
+![alt](ui.png)
 
 # Deploy
 
