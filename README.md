@@ -1,18 +1,8 @@
-# Configuration
-
-`main.py` contient la liste des département à parser
-
-# Run
+# Deploy
 
 ## Docker compose
 ```sh
-docker compose up --build
-```
-
-## Docker run / build
-```sh
-docker build -t scraper ./
-docker run scraper
+docker-compose -f .\docker-compose.yml up --build --remove-orphans
 ```
 
 # Tor proxies
