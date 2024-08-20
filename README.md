@@ -1,9 +1,9 @@
 # Principes
 
 Ce projet permet de
-    - d'afficher les arrêtés préfectoraux concernant les rassemblement festifs.
-    - de rechercher par mots clés les URLs contenant les arrêtés prefectoraux en PDF
-    - de rechercher dans un PDF s'il y a un arrêté prefectoral concernant les rassemblement festifs
+- d'afficher les arrêtés préfectoraux concernant les rassemblement festifs.
+- de rechercher par mots clés les URLs contenant les arrêtés prefectoraux en PDF
+- de rechercher dans un PDF s'il y a un arrêté prefectoral concernant les rassemblement festifs
 
 Le scraping et l'analyse de PDF peuvent être executées en python et à travers plusieurs noeuds TOR mais en mettant à contributions les utilisateurs du système, en executant le scraping depuis leur navigateur.
 
