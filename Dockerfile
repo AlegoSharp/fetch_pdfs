@@ -1,5 +1,7 @@
 FROM python:3.9-slim-buster
 
+ENV TZ=Europe/Paris 
+
 # Install required packages
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -14,13 +16,16 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     lsb-release \
     gnupg2 \
+    tzdata \
     && rm -rf /var/lib/apt/lists/*
 
+RUN ln -fs /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
 # Install required Python packages
-
 
 # Copy the script to the container
 COPY . .
+
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r ./requirements.txt
 
@@ -28,4 +33,4 @@ RUN pip install --no-cache-dir -r ./requirements.txt
 WORKDIR /app
 
 # Run the script
-CMD ["python", "/app/App.py"]
+CMD ["python", "-u", "/app/App.py"]

@@ -28,7 +28,7 @@ function getRaaUrls(baseUrl, html, keywords) {
         keywords.forEach(keyword => {
             if (text.includes(keyword)) {
                 const href = link.getAttribute('href');
-                if (href) {
+                if (href && href.indexOf(".pdf") == -1) {
                     const url = new URL(href, baseUrl).href;
                     urls.push(url);
                 }
@@ -40,7 +40,7 @@ function getRaaUrls(baseUrl, html, keywords) {
 }
 
 // Fonction pour extraire les liens PDF à partir de la page HTML
-function getPdfs(baseUrl, html, lasturl="") {
+function getPdfs(html, lastUrl="") {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
     const links = doc.querySelectorAll('a[href$=".pdf"]');
@@ -48,11 +48,8 @@ function getPdfs(baseUrl, html, lasturl="") {
     
     links.forEach(link => {
         const href = link.getAttribute('href');
-        if (href) {
-            const url = new URL(href, baseUrl).href;
-            if(url != lasturl){
-                pdfUrls.push(url);
-            }
+        if (href && href != lastUrl) {
+           pdfUrls.push(href);
         }
     });
     
@@ -97,10 +94,9 @@ async function fetchAllRaa(annee) {
 }
 
 // Fonction pour récupérer les RAA pour un département donné
-async function fetchPdfs(departement, subPageUrl) {
-    const baseUrl = `https://www.${departement}.gouv.fr`;
+async function fetchPdfs(subPageUrl, lastUrl="") {
     const subPageContent = await getPage(subPageUrl);
-    return getPdfs(baseUrl, subPageContent, "https://www.finistere.gouv.fr/contenu/telechargement/63986/485493/file/RAA%2029-2024-107.pdf")
+    return getPdfs(subPageContent, lastUrl)
 }
 
 // Fonction pour récupérer les RAA pour un département donné

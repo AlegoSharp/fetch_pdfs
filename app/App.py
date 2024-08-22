@@ -1,10 +1,7 @@
 from flask import Flask, jsonify, render_template, request
 
-import PyPDF2
-
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, insert
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
 
 import Engine
 import DbModels
@@ -19,26 +16,71 @@ DATABASE_URL = "postgresql://postgres:postgres@db:5432/postgres"
 # Création du moteur SQLAlchemy
 engine = create_engine(DATABASE_URL)
 
-# Base pour la déclaration des modèles
-Base = declarative_base()
-
 # Session pour interagir avec la base de données
 Session = sessionmaker(bind=engine)
-session = Session()
+
 
 @app.route('/map', methods=['GET'])
 def map():
+   session = Session()
+   arretes = []
    urls = session.query(DbModels.Raa).all()
-   arretes = ['29', '01', '07', '41'] 
+   pdf_link= session.query(DbModels.PdfLink).all()
+   for link in pdf_link:
+      dpt = session.query(DbModels.Departement).where(DbModels.Departement.departement_id == link.departement_id).first()
+      arretes.append({
+         "code": dpt.departement_code,
+         "url": f"https://{dpt.departement_slug}.gouv.fr{link.pdf_url}"
+      })
+   session.close()
    return render_template("map.html", arretes=arretes, urls=urls) 
+
+@app.route('/api/<dpt_code>', methods=['GET'])
+def fetch_urls(dpt_code):
+   session = Session()
+   res = []
+
+   dpt = session.query(DbModels.Departement).where(DbModels.Departement.departement_code == dpt_code).first()
+   urls = session.query(DbModels.Raa).where(DbModels.Raa.departement_id == dpt.departement_id).all()
+
+   res = {
+      "departement_slug": dpt.departement_slug,
+      "urls": []
+   }
+   for url in urls:
+      res['urls'].append({
+         "url": url.raa_url,
+         "lastUrl": url.publications_url
+      })
+
+   session.close()
+   return jsonify(res)
 
 @app.route('/readPdf', methods=['POST'])
 def readPdf():
-    PdfReader.readPdf(request.get_json())
+   session = Session()
+
+   datas = request.get_json()
+   dpt = session.query(DbModels.Departement).where(DbModels.Departement.departement_code == datas['dpt']).first()
+   
+   pdfsResults = PdfReader.readPdf(dpt, datas['url'])
+   if pdfsResults['match']:
+      new_pdf = DbModels.PdfLink(
+         departement_id=dpt.departement_id,
+         start_date=pdfsResults['start_date'],
+         end_date=pdfsResults['end_date'],
+         pdf_url=datas['url']
+      )
+      session.add(new_pdf)
+      session.commit()
+
+   session.close()
+   return jsonify(pdfsResults)
 
 @app.route('/api/<departement>/<annee>/pdfs', methods=['GET'])
 def fetch_departement(departement, annee):
    return jsonify(Engine.fetch_departement_raa(departement,annee))
+
 
 @app.route('/api/<annee>/pdfs', methods=['GET'])
 def fetch_all(annee):
