@@ -7,3 +7,6 @@ pysocks
 psycopg2
 sqlalchemy
 PyPDF2
+
+pdf2image 
+pytesseract

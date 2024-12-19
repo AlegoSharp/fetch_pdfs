@@ -26,7 +26,9 @@ function getRaaUrls(baseUrl, html, keywords) {
     links.forEach(link => {
         const text = link.textContent.trim();
         keywords.forEach(keyword => {
-            if (text.includes(keyword)) {
+            const myRe = new RegExp(keyword, "i");
+            let match = myRe.exec(text);
+            if (match && match.length > 0) {
                 const href = link.getAttribute('href');
                 if (href && href.indexOf(".pdf") == -1) {
                     const url = new URL(href, baseUrl).href;
@@ -45,7 +47,6 @@ function getPdfs(html, lastUrl="") {
     const doc = parser.parseFromString(html, 'text/html');
     const links = doc.querySelectorAll('a[href$=".pdf"]');
     let pdfUrls = [];
-    
     links.forEach(link => {
         const href = link.getAttribute('href');
         if (href && href != lastUrl) {
@@ -103,15 +104,19 @@ async function fetchPdfs(subPageUrl, lastUrl="") {
 async function fetchDepartementRaa(departement, annee) {
     const baseUrl = `https://www.${departement}.gouv.fr`;
     const fullUrl = `${baseUrl}/Publications`;
-
+    
+    console.log("STEP 1 : Détection de la page racine RAA")
+    
     // STEP 1 : Détection de la page racine RAA
     let pageContent = await getPage(fullUrl);
     let raaUrls = getRaaUrls(baseUrl, pageContent, [
         "RAA", "actes administratifs", "Actes Administratifs", "Arrêtés préfectoraux"
     ]);
-
+    console.log("STEP 1 RESULT: ", raaUrls);
+    
     // Workaround si on ne trouve pas l'url des RAA directement
     if (raaUrls.length === 0) {
+        console.log("Workaround si on ne trouve pas l'url des RAA directement")
         raaUrls = getRaaUrls(baseUrl, pageContent, [
             "Publications légales", "Publications administratives et légales"
         ]);
@@ -120,9 +125,10 @@ async function fetchDepartementRaa(departement, annee) {
             raaUrls = getRaaUrls(baseUrl, pageContent, [
                 "RAA", "actes administratifs", "Actes Administratifs", "Arrêtés préfectoraux"
             ]);
+            console.log("WORKAROUND RESULT: ", raaUrls);
         }
     }
-
+    
     if (raaUrls.length === 0) {
         return {
             message: "Erreur, le programme ne peut pas analyser ce département",
@@ -130,49 +136,61 @@ async function fetchDepartementRaa(departement, annee) {
             url: fullUrl
         };
     }
-
+    
     // STEP 2 : Détection des sous-pages années (ou paire années/mois)
+    console.log("STEP 2 : Détection des sous-pages années (ou paire années/mois)")
     pageContent = await getPage(raaUrls[0]);
-    const subPageUrls = getRaaUrls(baseUrl, pageContent, [
-        `RAA ${annee}`, `Recueil des actes administratifs ${annee}`, `Année ${annee}`, `${annee}`
+    let subPageUrls = getRaaUrls(baseUrl, pageContent, [
+        `RAA ${annee}`, 
+        `Recueil des actes administratifs ${annee}`, 
+        `Année ${annee}`, 
+        `${annee}`
     ]);
-
-    // STEP X : Récupération des liens de pdf
+    // Filtre avec l'url raa de base pour enlever faux retours
+    subPageUrls = subPageUrls.filter((url) => {
+        const myRe = new RegExp(raaUrls[0], "i");
+        let match = myRe.exec(url);
+        return match && match.length > 0;
+    });
+    console.log("STEP 2 RESULT: ", subPageUrls);
+    
+    // STEP 3 : Récupération des liens de pdf
+    console.log("STEP 3 : Récupération des liens de pdf");
     const pdfs = [];
+    let res = {
+        publications: fullUrl,
+        raa_url: [],
+        subpage_urls: subPageUrls,
+        links: []
+    };
     for (const subPageUrl of subPageUrls) {
         const subPageContent = await getPage(subPageUrl);
-        const monthUrls = getRaaUrls(baseUrl, subPageContent, [
-            "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-            "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-        ]);
-
+        //all_months = [
+        //    "Janvier", "F(?:e|é)vrier", "Mars", "Avril", "Mai", "Juin",
+        //    "Juillet", "Ao(?:u|û)t", "Septembre", "Octobre", "Novembre", "D(?:e|é)cembre"
+        //]
+        const monthUrls = getRaaUrls(baseUrl, subPageContent, ['octobre']);
+        let pdflist;
         if (monthUrls.length > 0) {
             for (const monthUrl of monthUrls) {
-                const monthContent = await getPage(monthUrl);
-                pdfs.push({
+                pdflist = await fetchPdfs(monthUrl);
+                res.links.push({
                     subpage_url: monthUrl,
-                    pdfs: getPdfs(baseUrl, monthContent)
+                    pdfs: pdflist
                 });
+                res.raa_url.push(monthUrl);
             }
-            return {
-                publications: fullUrl,
-                raa_url: raaUrls,
-                subpage_urls: subPageUrls,
-                links: pdfs
-            };
+            console.log("STEP 3 RESULT: ", pdflist);
+            return res;
         }
-
-        pdfs.push({
+        pdflist = await fetchPdfs(subPageUrl);
+        console.log("STEP 3 RESULT: ", pdflist);
+        res.links.push({
             subpage_url: subPageUrl,
-            pdfs: getPdfs(baseUrl, subPageContent)
+            pdfs: pdflist
         });
+        res.raa_url.push(subPageUrl);
     }
-
-    return {
-        publications: fullUrl,
-        raa_url: raaUrls,
-        subpage_urls: subPageUrls,
-        links: pdfs
-    };
+    return res;
 }
 

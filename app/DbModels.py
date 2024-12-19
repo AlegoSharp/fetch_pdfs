@@ -32,6 +32,6 @@ class PdfLink(Base):
 
     id = Column(Integer, primary_key=True)
     departement_id = Column(Integer, ForeignKey('departement.departement_id'))
-    start_date = Column(Date, nullable=False)
-    end_date = Column(Date, nullable=False)
+    start_date = Column(Date, nullable=True)
+    end_date = Column(Date, nullable=True)
     pdf_url = Column(Text, nullable=False)

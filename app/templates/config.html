@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Carte de France</title>
+        <script type="text/javascript" src="{{ url_for('static',filename='js/utils.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static',filename='js/fetcher.js') }}"></script>
+       
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/chimeracss/build/chimera.css"/>
+        
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+	</head>
+    <body>
+        <table id="table_raa"></table>
+	</body>
+</html>
+
+<script>
+    init();
+    async function init(){
+        const config_resp = await fetch(`${window.origin}/api/config`, {
+            headers: new Headers({'content-type': 'application/json'}),
+        });
+        
+        const config = await config_resp.json();
+        console.log(config);
+        let table = new DataTable('#table_raa', {
+            columns: [
+                { data: 'dpt' },
+                { data: 'slug' },
+                { data: 'url' },
+                { 
+                    data: null, 
+                    title: 'Action', 
+                    wrap: true,
+                    render: function () { 
+                        return '<button type="button">Chercher url</button>' 
+                    }
+                },
+            ],  
+            data: config,
+            
+        });
+        table.on('click', 'button', async function (e) {
+            let data = table.row(e.target.closest('tr')).data();
+            let res = await GetUrls(data)
+            console.log("Res GetUrl", res);
+        });
+    }
+
+    async function GetUrls(data) {
+        const url = await fetch(`${window.origin}/api/${data.dpt}`, {
+            headers: new Headers({'content-type': 'application/json'}),
+        });
+        
+        const url_json = await url.json();
+        let departement = url_json.departement_slug;
+        
+        return await fetchDepartementRaa(departement, 2024);
+                
+        //return resp.raa_url.filter(onlyUnique)
+    }
+</script>

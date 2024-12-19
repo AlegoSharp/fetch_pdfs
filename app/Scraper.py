@@ -35,3 +35,17 @@ class Scraper:
                 links.append(f'{self.url}{current_link}')
     
         return links
+    
+    def parse_fb(self):
+        divs = self.soup.find_all("div", attrs={'class': None})
+        page_title = self.soup.title.string
+        page_description = self.soup.find("meta", property="og:description")["content"]
+        feed_title = f"{page_title} - Flux RSS"
+        feed_description = page_description
+        print(feed_title)
+        print(feed_description)
+
+        for post in self.soup.find_all("div"):
+            print(post)
+        return page_description
+        

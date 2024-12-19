@@ -3,12 +3,17 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Carte de France</title>
+		<script type="text/javascript" src="{{ url_for('static',filename='js/utils.js') }}"></script>
 		<script type="text/javascript" src="{{ url_for('static',filename='js/fetcher.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static',filename='js/map.js') }}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<link rel="stylesheet" type="text/css" href="https://unpkg.com/chimeracss/build/chimera.css"/>
 	</head>
 	<body>
-		<div class="container">
+		<div class="container" id="vm">
 			<div class="carte">
-				<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 667 578" xml:space="preserve">
+				<svg id="svgCarte" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 667 578" xml:space="preserve">
 					<g class="region region-01" data-nom="Guadeloupe" data-code_insee="01">
 						<path data-nom="Guadeloupe" data-numerodepartement="971" class="region-01 departement departement-971 departement-guadeloupe" d="M35.87,487.13l0.7,7.2l-4.5-1.1l-2,1.7l-5.8-0.6l-1.7-1.2l4.9,0.5l3.2-4.4L35.87,487.13z M104.87,553.63 l-4.4-1.8l-1.9,0.8l0.2,2.1l-1.9,0.3l-2.2,4.9l0.7,2.4l1.7,2.9l3.4,1.2l3.4-0.5l5.3-5l-0.4-2.5L104.87,553.63z M110.27,525.53 l-6.7-2.2l-2.4-4.2l-11.1-2.5l-2.7-5.7l-0.7-7.7l-6.2-4.7l-5.9,5.5l-0.8,2.9l1.2,4.5l3.1,1.2l-1,3.4l-2.6,1.2l-2.5,5.1l-1.9-0.2 l-1,1.9l-4.3-0.7l1.8-0.7l-3.5-3.7l-10.4-4.1l-3.4,1.6l-2.4,4.8l-0.5,3.5l3.1,9.7l0.6,12l6.3,9l0.6,2.7c3-1.2,6-2.5,9.1-3.7l5.9-6.9 l-0.4-8.7l-2.8-5.3l0.2-5.5l3.6,0.2l0.9-1.7l1.4,3.1l6.8,2l13.8-4.9L110.27,525.53z"></path>
 					</g>
@@ -145,103 +150,231 @@
 					<g class="region region-94" data-nom="Corse" data-code_insee="94">
 						<path data-nom="Corse-du-Sud" data-numerodepartement="2A" class="region-94 departement departement-2A departement-corse-du-sud" d="m640.5,554.2l3.2-1.7l0.7,8.4l-0.15,0.54 l-1.85,4.86l-2.7,1.9l3.3,0.4l-5.8,14.7l-3.1-1.2l-1.2-2.8l-11.2-3.4l-4.8-4.4l0.2-3l4.9-3.3l-9.5-1.9l2.7-7l-0.9-5.8l-7.3,2.6 l3-8.4l2.6-1.6l-7.9-4.4l-1.1-5.5l5.3-3.8l-3.8-4.2l-2.6,1l0.5-2.7l13.6,2.1l1.2,3.5l6,3.4l6,5.9l0.5,3.2l2.7,1.1l3.7,11 L640.5,554.2z"></path>
 						<path data-nom="Haute-Corse" data-numerodepartement="2B" class="region-94 departement departement-2B departement-haute-corse" d="m643.7,551.5v1l-3.2,1.7l-3.8-0.5l-3.7-11 l-2.7-1.1l-0.5-3.2l-6-5.9l-6-3.4l-1.2-3.5l-13.6-2.1v-0.2l3.9-5l-0.3-3.4l2.2-2.8l2.8-0.3l0.9-2.9l10.7-4.2l3.5-4.9l8.6,1.3 l-0.5-17.4l2.4-2l2.9,1.1l0.18,0.89l1.52,8.21l-0.5,10.6l4,5.6l3.8,26l-5.4,11.9V551.5L643.7,551.5z"></path>
-					</g></svg>
+					</g>
+					<text x="66.41999816894531" y="526.780029296875" font-size="100" class="small">971</text>
+					<text x="65.9799919128418" y="443.50001525878906" font-size="100" class="small">972</text>
+					<text x="66.44999313354492" y="349.5699768066406" font-size="100" class="small">973</text>
+					<text x="66.48000144958496" y="261.74999237060547" font-size="100" class="small">974</text>
+					<text x="57.78499984741211" y="177.57001495361328" font-size="100" class="small">976</text>
+					<text x="516.4499816894531" y="109.45000457763672" font-size="100" class="small">75</text>
+					<text x="420.54998779296875" y="171.5" font-size="100" class="small">77</text>
+					<text x="374.3500061035156" y="162.6500015258789" font-size="100" class="small">78</text>
+					<text x="390.90000915527344" y="176.99998474121094" font-size="100" class="small">91</text>
+					<text x="501.0999755859375" y="103.94999694824219" font-size="100" class="small">92</text>
+					<text x="530.1499633789062" y="93.14999580383301" font-size="100" class="small">93</text>
+					<text x="532.5700073242188" y="119.29999542236328" font-size="100" class="small">94</text>
+					<text x="384.8000030517578" y="143.6999969482422" font-size="100" class="small">95</text>
+					<text x="398" y="269.99998474121094" font-size="100" class="small">18</text>
+					<text x="355.04998779296875" y="181.8499984741211" font-size="100" class="small">28</text>
+					<text x="360.5499725341797" y="282.8000030517578" font-size="100" class="small">36</text>
+					<text x="325.6499938964844" y="256.99998474121094" font-size="100" class="small">37</text>
+					<text x="356.5500030517578" y="230.5" font-size="100" class="small">41</text>
+					<text x="393.300048828125" y="214.69995880126953" font-size="100" class="small">45</text>
+					<text x="497.3000183105469" y="241.1999969482422" font-size="100" class="small">21</text>
+					<text x="563.3998718261719" y="262.7950210571289" font-size="100" class="small">25</text>
+					<text x="537.5999755859375" y="281.80003356933594" font-size="100" class="small">39</text>
+					<text x="445" y="264.2000274658203" font-size="100" class="small">58</text>
+					<text x="550.6000061035156" y="228.60001373291016" font-size="100" class="small">70</text>
+					<text x="487.4499969482422" y="291.4499969482422" font-size="100" class="small">71</text>
+					<text x="446.1499938964844" y="217.70000457763672" font-size="100" class="small">89</text>
+					<text x="586.0499877929688" y="227.14999389648438" font-size="100" class="small">90</text>
+					<text x="285.1499786376953" y="140.84997177124023" font-size="100" class="small">14</text>
+					<text x="342.5500183105469" y="142.59999465942383" font-size="100" class="small">27</text>
+					<text x="247.15000915527344" y="138.89998626708984" font-size="100" class="small">50</text>
+					<text x="300.49998474121094" y="173.15003204345703" font-size="100" class="small">61</text>
+					<text x="338.8999938964844" y="107.25499725341797" font-size="100" class="small">76</text>
+					<text x="445.1500244140625" y="119.74999618530273" font-size="100" class="small">02</text>
+					<text x="427.3149871826172" y="53.44999694824219" font-size="100" class="small">59</text>
+					<text x="398.09999084472656" y="122.74999618530273" font-size="100" class="small">60</text>
+					<text x="396.5999755859375" y="54.8799991607666" font-size="100" class="small">62</text>
+					<text x="392.35498046875" y="88.45000839233398" font-size="100" class="small">80</text>
+					<text x="489.5498809814453" y="103.70001220703125" font-size="100" class="small">08</text>
+					<text x="467.95001220703125" y="189.24998474121094" font-size="100" class="small">10</text>
+					<text x="470.8000030517578" y="149.60000228881836" font-size="100" class="small">51</text>
+					<text x="515.25" y="199.59998321533203" font-size="100" class="small">52</text>
+					<text x="555.4500732421875" y="147.94998931884766" font-size="100" class="small">54</text>
+					<text x="517.300048828125" y="144.60000228881836" font-size="100" class="small">55</text>
+					<text x="572.989990234375" y="142.10000228881836" font-size="100" class="small">57</text>
+					<text x="606.9500122070312" y="166.1649932861328" font-size="100" class="small">67</text>
+					<text x="596.8999633789062" y="211.54999542236328" font-size="100" class="small">68</text>
+					<text x="557.2000427246094" y="194.05001068115234" font-size="100" class="small">88</text>
+					<text x="225.29998779296875" y="246.20004272460938" font-size="100" class="small">44</text>
+					<text x="273.25003814697266" y="244.00000762939453" font-size="100" class="small">49</text>
+					<text x="271.1500244140625" y="198.79998016357422" font-size="100" class="small">53</text>
+					<text x="306.4999694824219" y="207.15000915527344" font-size="100" class="small">72</text>
+					<text x="239.59999084472656" y="287.49998474121094" font-size="100" class="small">85</text>
+					<text x="184.84999084472656" y="174.70000457763672" font-size="100" class="small">22</text>
+					<text x="131.14999771118164" y="184.8999786376953" font-size="100" class="small">29</text>
+					<text x="229.49999237060547" y="194.699951171875" font-size="100" class="small">35</text>
+					<text x="178.65000915527344" y="217.50501251220703" font-size="100" class="small">56</text>
+					<text x="303.9500427246094" y="352.4499969482422" font-size="100" class="small">16</text>
+					<text x="261.95003509521484" y="346.89988708496094" font-size="100" class="small">17</text>
+					<text x="374.3500213623047" y="373.19996643066406" font-size="100" class="small">19</text>
+					<text x="379.5499725341797" y="329.0500183105469" font-size="100" class="small">23</text>
+					<text x="323.05006408691406" y="384.9000701904297" font-size="100" class="small">24</text>
+					<text x="271.50000762939453" y="398.49993896484375" font-size="100" class="small">33</text>
+					<text x="259.51002502441406" y="451.79998779296875" font-size="100" class="small">40</text>
+					<text x="311.7000274658203" y="432.0500030517578" font-size="100" class="small">47</text>
+					<text x="250.7000274658203" y="503.05006408691406" font-size="100" class="small">64</text>
+					<text x="280.9499969482422" y="298.3000030517578" font-size="100" class="small">79</text>
+					<text x="319.0999755859375" y="294.2499542236328" font-size="100" class="small">86</text>
+					<text x="348.04994201660156" y="337.6999816894531" font-size="100" class="small">87</text>
+					<text x="356.3999786376953" y="521.0950164794922" font-size="100" class="small">09</text>
+					<text x="400.0849914550781" y="514.3001403808594" font-size="100" class="small">11</text>
+					<text x="408.59999084472656" y="436.54998779296875" font-size="100" class="small">12</text>
+					<text x="470.5500030517578" y="457.1000061035156" font-size="100" class="small">30</text>
+					<text x="344.8999786376953" y="497.8000030517578" font-size="100" class="small">31</text>
+					<text x="309.45001220703125" y="474.5" font-size="100" class="small">32</text>
+					<text x="440.7500305175781" y="480.98504638671875" font-size="100" class="small">34</text>
+					<text x="362.0499572753906" y="416.95001220703125" font-size="100" class="small">46</text>
+					<text x="445.1499938964844" y="422.2499694824219" font-size="100" class="small">48</text>
+					<text x="295.5950469970703" y="507.15000915527344" font-size="100" class="small">65</text>
+					<text x="400.74998474121094" y="539.8499755859375" font-size="100" class="small">66</text>
+					<text x="390.2500457763672" y="468.99998474121094" font-size="100" class="small">81</text>
+					<text x="351.2000274658203" y="450.89996337890625" font-size="100" class="small">82</text>
+					<text x="527.6000061035156" y="326.6000061035156" font-size="100" class="small">01</text>
+					<text x="428.6000061035156" y="310.24998474121094" font-size="100" class="small">03</text>
+					<text x="483.4499816894531" y="404.10003662109375" font-size="100" class="small">07</text>
+					<text x="410.7000274658203" y="391.50001525878906" font-size="100" class="small">15</text>
+					<text x="521.4499206542969" y="408.8000030517578" font-size="100" class="small">26</text>
+					<text x="534.5000457763672" y="373.8499755859375" font-size="100" class="small">38</text>
+					<text x="475.94996643066406" y="346.9499816894531" font-size="100" class="small">42</text>
+					<text x="457.6000213623047" y="389.39988708496094" font-size="100" class="small">43</text>
+					<text x="430.8000183105469" y="346.9499969482422" font-size="100" class="small">63</text>
+					<text x="495.60003662109375" y="338.7500305175781" font-size="100" class="small">69</text>
+					<text x="570" y="359.6499481201172" font-size="100" class="small">73</text>
+					<text x="569.8500061035156" y="325.10011291503906" font-size="100" class="small">74</text>
+					<text x="566.4499816894531" y="440.99998474121094" font-size="100" class="small">04</text>
+					<text x="566.4999694824219" y="411.5500030517578" font-size="100" class="small">05</text>
+					<text x="609.3500366210938" y="454.5399932861328" font-size="100" class="small">06</text>
+					<text x="514.5499877929688" y="481.0500793457031" font-size="100" class="small">13</text>
+					<text x="571.9400024414062" y="487.2500915527344" font-size="100" class="small">83</text>
+					<text x="521.8000030517578" y="454.1999969482422" font-size="100" class="small">84</text>
+					<text x="623.4500427246094" y="553.3999938964844" font-size="100" class="small">2A</text>
+					<text x="626.050048828125" y="517.9499969482422" font-size="100" class="small">2B</text>
+					
+				</svg>
 			</div>
 			<div id="urls">
-				{% for item in arretes%}
-					<p>
-						<a href="{{ item.url }}">{{ item.code }}</a>
-					</p>
-				{% endfor %}
-				<table id="myTable"></table>
+		
+				<div class="raa_list">
+					<span id="dpt_select">
+			
+						<!--
+						<p id="dpt-code"></p>
+						<p id="dpt-nom"></p>
+						<input type="text" disabled name="url" id="dpt-last-url">
+					
+						<p>
+							<button style="display: none;" onclick="addUrl()">Sauvegarder l'url</button>
+						</p>
+					-->
+						<div>
+							<h3><b id="dpt-title"></b></h3>
+							<div style="width: 100%;">
+								<a target="_blank" id="url-raa"></a>
+								<button id="search-url" onclick="GetUrls()">Rechercher l'url</button>
+							</div>
+							<div id="div-ongoing-arrete">
+								<h4>Arrêté en cours du <b id="du"></b> au <b id="au"></b></h4>
+								<a id="current-arrete">Voir l'arrêté</a>
+							</div>
+						</div>
+						<div>
+							<h3>Ajouter un arrêté</h3>
+							<div class="inputDiv">
+								<label for="url">Url du pdf de l'arrêté</label>
+								<input type="text" name="url" id="dpt-new-raa">
+							</div>
+	
+							<div class="inputDiv">
+								<label for="raa-start">Début de l'arrêté</label>
+								<input type="date" name="raa-start" id="dpt-new-raa-start">
+							</div>
+	
+							<div class="inputDiv">
+								<label for="raa-end">Fin de l'arrêté</label>
+								<input type="date" name="raa-end" id="dpt-new-raa-end">
+							</div>
+	
+							<button onclick="addArrete()">Ajouter un arrêté</button>
+						</div>
+						<div id="div-search">
+							<h3>Rechercher un arrêté</h3>
+							<div class="inputDiv">
+								<label for="reverse">Maximum de pdf à lire : </label>
+								<input type="number" name="pdfLimit" id="pdfLimit" value="6">
+							</div>
+							<div class="inputDiv">
+								<label for="reverse">Inverser l'ordre de recherche : </label>
+								<input type="checkbox" name="reverse" id="dpt-reverse">
+							</div>
+							<button onclick="showActions()">Chercher les arrêtés automatiquement</button>
+							<table id="myTableArretes"></table>
+						</div>
+					</span>
+				</div>
 			</div>
 		</div>
 		
 	</body>
 </html>
-<script>
-	const pdfLimit = 4;
-	
-	let dpts = document.getElementsByClassName("departement");
-	
-	for (let index = 0; index < dpts.length; index++) {
-		const element = dpts[index];
-		element.setAttribute("fill", "#ffffff")
-		element.addEventListener('click', GetArretes);
-	}
-
-	async function GetUrls(event) {
-		const url = await fetch(`${window.origin}/api/${event.currentTarget.dataset.numerodepartement}`, {
-			headers: new Headers({'content-type': 'application/json'}),
-		});
-		const url_json = await url.json();
-
-		let departement = url_json.departement_slug;
-		
-		let resp = await fetchDepartementRaa(departement, 2024);
-		var table = document.getElementById("myTable");
-
-		// insert data
-		resp.raa_url.forEach(function (item) {
-			var row = table.insertRow();
-			addCell(row, item);
-		});
-	}
-
-	// helper function        
-	function addCell(tr, text) {
-		var td = tr.insertCell();
-		td.textContent = text;
-		return td;
-	}
-
-	async function GetArretes(event) {
-		const url = await fetch(`${window.origin}/api/${event.currentTarget.dataset.numerodepartement}`, {
-			headers: new Headers({'content-type': 'application/json'}),
-		});
-
-		const url_json = await url.json();
-		let resp_pdf={};
-		for (let index = 0; index < url_json.urls.length; index++) {
-			const element = url_json.urls[index];
-
-			let resp_pdf = await fetchPdfs(element.url, element.lastUrl);
-			for (let index = 0; index < resp_pdf.length; index++) {
-				if (index == pdfLimit) { break; }
-
-				const pdf_url = resp_pdf[index];
-				let body = JSON.stringify({ 
-					url: pdf_url,
-					dpt: event.target.dataset.numerodepartement
-				});
-
-				const response = await fetch(`${window.origin}/readPdf`, {
-					body: body,
-					method: "POST",
-					headers: new Headers({'content-type': 'application/json'}),
-				});
-			}
-		}
-	}
-
+<script>	
+	init_map();
 </script>
 <style type="text/css">
 	.container div {
 		float: left;
 		clear: none; 
 	}
+	
+	.inputDiv {
+		width: 100%;
+		margin: 5px;
+	}
+	h4 {
+		color: red;
+	}
+
 	.carte {
 		width: 49%;
 	}
+
 	.departement{
 		fill:#f0e47d;
 	}
+	
+	#search-url {
+		display: none;
+	}
+	
+	#div-search{
+		display: none;
+	}
+
+	#div-ongoing-arrete{
+		display: none;
+	}
+	#urls{
+		margin-left: 10px;
+		width: 45%;
+	}
+
+	.raa_list {
+		font-size: 20;
+		width: 100%
+	}
+
+	.small {
+      font: 8px sans-serif;
+	  pointer-events:none;
+    }
 
 	path {
 		stroke: #000000;
 		stroke-opacity: .25;		
 		stroke-dasharray: 2 2 2 2;
-		opacity: 0.4;
+		opacity: 0.5;
 	}
 	
 	g:hover path {
@@ -249,8 +382,9 @@
 		stroke-opacity: 0.5;
 		stroke-width: 1px;
 		stroke-dasharray: none;
-		opacity: 0.7;
+		opacity: 0.8;
 	}
+
 	g path:hover {
 		stroke: #000000;
 		stroke-opacity: 1;
@@ -271,4 +405,6 @@
 		opacity: 0.7;
 	}
 	{% endfor %}
+
+
 </style>
