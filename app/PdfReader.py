@@ -54,7 +54,7 @@ def readPdf(dpt:DbModels.Departement, url_pdf):
 
         date_patterns = [
             r"((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+) au ((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+)", 
-            r"((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+) (?:2024) à \d+ heures au ((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+) (?:2024)", 
+            r"((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+) (?:2025) à \d+ heures au ((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+) (?:2025)", 
             r"(\d{2} .+ )au( \d{2} .+)",
         ]
 

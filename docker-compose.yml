@@ -12,6 +12,7 @@ services:
       - ./app/templates:/app/templates
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+      - ./fdgsi.fun:/fdgsi.fun
     environment:
       - SLEEP_TIME=1                # Temps en secondes entre chaque requêtes
       - DB_HOST=db

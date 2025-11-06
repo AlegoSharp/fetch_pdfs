@@ -3,10 +3,14 @@ from flask import Flask, jsonify, render_template, request
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+import urllib.request
+import ssl
+
 import Engine
 import DbModels
 import PdfReader
 import datetime
+from datetime import date
 
 app = Flask(__name__)
 app.json.sort_keys = False
@@ -107,7 +111,7 @@ def add_url(slug):
 
    new_raa = DbModels.Raa(
       departement_id= dpt.departement_id,
-      year = 2024,
+      year = 2025,
       raa_url = datas["url"],
    )
 
@@ -118,7 +122,7 @@ def add_url(slug):
 
    return jsonify({
       "departement_id": dpt.departement_id,
-      "year": 2024,
+      "year": 2025,
       "raa_url": datas["url"],
    })
 
@@ -144,7 +148,7 @@ def add_arrete(slug):
 
    return jsonify({
       "departement_id": dpt.departement_id,
-      "year": 2024,
+      "year": 2025,
       "raa_url": datas["url"],
    })
 
@@ -188,7 +192,7 @@ def fetch_all(annee):
 def fetch_arretes(departement):
    session = Session()
    dpt = session.query(DbModels.Departement).where(DbModels.Departement.departement_code == departement).first()
-   arrete = session.query(DbModels.PdfLink).where(DbModels.PdfLink.departement_id == dpt.departement_id).first()
+   arrete = session.query(DbModels.PdfLink).where(DbModels.PdfLink.departement_id == dpt.departement_id).where(DbModels.PdfLink.end_date >= date.today()).order_by(DbModels.PdfLink.end_date.desc()).first()
    url = ""
    start = {}
    end = {}
@@ -206,6 +210,22 @@ def fetch_arretes(departement):
    }
 
    return jsonify(res)
+
+@app.route('/api/<departement>/attrap', methods=['GET'])
+def fetch_attrap(departement):
+   data = {}
+   context = ssl._create_unverified_context()
+   session = Session()
+   dpt = session.query(DbModels.Departement).where(DbModels.Departement.departement_code == departement).first()
+   
+   administration = "pref"+dpt.departement_code
+   url = "https://attrap.fr/api/v1/search?s=%22rave%22&sort=desc&administration="+administration
+
+   with urllib.request.urlopen(url, context=context) as res:
+         data = res.read()
+
+   return data
+
 
 
 @app.route('/api/fb/<page>', methods=['GET'])

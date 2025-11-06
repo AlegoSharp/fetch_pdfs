@@ -1,6 +1,6 @@
 let selected_dpt;
 let pdfLimit = 6;
-const ANNEE = 2024;
+const ANNEE = 2025;
 
 function init_map() {
     let dpts = document.getElementsByClassName("departement");
@@ -67,6 +67,8 @@ async function addUrl(url) {
 async function selectDpt(event){
     selected_dpt = event.target;
     if (selected_dpt) {
+        document.getElementById("div-ongoing-arrete").style.display = "none";
+        document.getElementById("div-ongoing-arrete-attrap").style.display = "none";
         document.getElementById("dpt-title").textContent = selected_dpt.dataset.nom + " ("+ selected_dpt.dataset.numerodepartement +")"
         document.getElementById("dpt_select").style.display = "block";
         
@@ -106,6 +108,31 @@ async function selectDpt(event){
         } else {
             document.getElementById("div-ongoing-arrete").style.display = "none";
         }
+
+        const attrap = await fetch(`${window.origin}/api/${selected_dpt.dataset.numerodepartement}/attrap`, {
+            headers: new Headers({'content-type': 'application/json'}),
+        });
+        const attrap_json = await attrap.json();
+        
+        if (attrap_json.elements.length > 0 && attrap_json.elements[0].administration == "pref"+selected_dpt.dataset.numerodepartement) {  
+            document.getElementById("div-ongoing-arrete-attrap").style.display = "block";
+
+            document.getElementById("attrap-arrete").href = "https://attrap.fr/raa/"+attrap_json.elements[0].id;
+            document.getElementById("attrap-arrete").innerText = "https://attrap.fr/raa/"+attrap_json.elements[0].id;
+
+            document.getElementById("attrap-arrete-pdf").href = attrap_json.elements[0].url;
+            document.getElementById("attrap-arrete-pdf").innerText = attrap_json.elements[0].url;
+
+            document.getElementById("attrap-date").innerText = attrap_json.elements[0].date;
+            //document.getElementById("attrap-arrete-content").innerText = attrap_json.elements[0].content;
+
+
+            //document.getElementById("du").textContent = attrap_json[0].start;
+            //document.getElementById("au").textContent = attrap_json[0].end;
+        } else {
+            document.getElementById("div-ongoing-arrete-attrap").style.display = "none";
+        }
+
 
     } else {
         document.getElementById("dpt_select").style.display = "none";
@@ -155,7 +182,7 @@ async function GetUrls() {
     const url_json = await url.json();
     let departement = url_json.departement_slug;
     
-    let resp = await fetchDepartementRaa(departement, 2024);
+    let resp = await fetchDepartementRaa(departement, 2025);
     var table = document.getElementById("myTableUrls");
     console.log(resp);
     // insert data
