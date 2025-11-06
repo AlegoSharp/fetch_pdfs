@@ -1,5 +1,7 @@
 FROM python:3.9-slim-buster
 
+ENV TZ=Europe/Paris 
+
 # Install required packages
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -14,18 +16,21 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     lsb-release \
     gnupg2 \
+    tzdata \
     && rm -rf /var/lib/apt/lists/*
 
+RUN ln -fs /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
 # Install required Python packages
-RUN pip install --no-cache-dir \
-    requests \
-    beautifulsoup4
 
 # Copy the script to the container
-COPY fetch_pdfs.py /app/
+COPY . .
+
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r ./requirements.txt
 
 # Set the working directory
 WORKDIR /app
 
 # Run the script
-CMD ["python", "fetch_pdfs.py"]
+CMD ["python", "-u", "/app/App.py"]
