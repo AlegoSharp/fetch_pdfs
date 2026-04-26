@@ -109,12 +109,17 @@ def add_url(slug):
 
    datas = request.get_json()
 
+   current_date = date.today()
+   current_year = current_date.year
+
    new_raa = DbModels.Raa(
       departement_id= dpt.departement_id,
-      year = 2025,
+      year = current_year,
       raa_url = datas["url"],
    )
-
+   current_date = date.today()
+   current_year = current_date.year
+   
    session.add(new_raa)
    session.commit()
 
@@ -122,7 +127,7 @@ def add_url(slug):
 
    return jsonify({
       "departement_id": dpt.departement_id,
-      "year": 2025,
+      "year": current_year,
       "raa_url": datas["url"],
    })
 
@@ -140,6 +145,8 @@ def add_arrete(slug):
       end_date = datas['end'],
       pdf_url = datas['url'],
    )
+   current_date = date.today()
+   current_year = current_date.year
 
    session.add(new_raa)
    session.commit()
@@ -148,7 +155,7 @@ def add_arrete(slug):
 
    return jsonify({
       "departement_id": dpt.departement_id,
-      "year": 2025,
+      "year": current_year,
       "raa_url": datas["url"],
    })
 

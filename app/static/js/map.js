@@ -1,6 +1,5 @@
 let selected_dpt;
 let pdfLimit = 6;
-const ANNEE = 2025;
 
 function init_map() {
     let dpts = document.getElementsByClassName("departement");
@@ -182,7 +181,7 @@ async function GetUrls() {
     const url_json = await url.json();
     let departement = url_json.departement_slug;
     
-    let resp = await fetchDepartementRaa(departement, 2025);
+    let resp = await fetchDepartementRaa(departement, new Date().getFullYear());
     var table = document.getElementById("myTableUrls");
     console.log(resp);
     // insert data
