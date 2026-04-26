@@ -61,7 +61,7 @@
         const url_json = await url.json();
         let departement = url_json.departement_slug;
         
-        return await fetchDepartementRaa(departement, 2024);
+        return await fetchDepartementRaa(departement, new Date().getFullYear());
                 
         //return resp.raa_url.filter(onlyUnique)
     }

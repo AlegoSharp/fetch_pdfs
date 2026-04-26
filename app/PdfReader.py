@@ -2,8 +2,8 @@ import re
 import requests 
 import PyPDF2 
 import DbModels
-import datetime
 import dateparser
+from datetime import date
 
 def downloadPdf(url):
 
@@ -52,12 +52,14 @@ def readPdf(dpt:DbModels.Departement, url_pdf):
             "diffusion de musique amplifiée",
         ]
 
+        current_date = date.today()
+        current_year = current_date.year
+        
         date_patterns = [
-            r"((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+) au ((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+)", 
-            r"((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+) (?:2024) à \d+ heures au ((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+) (?:2024)", 
-            r"(\d{2} .+ )au( \d{2} .+)",
+            rf"((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+) au ((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+)", 
+            rf"((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+) (?:{current_year}) à \d+ heures au ((?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) \d+ \w+) (?:{current_year})", 
+            rf"(\d{{2}} .+ )au( \d{{2}} .+)",
         ]
-
 
         # extract text and do the search
         for index, page in enumerate(reader.pages):

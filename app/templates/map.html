@@ -6,7 +6,6 @@
 		<script type="text/javascript" src="{{ url_for('static',filename='js/utils.js') }}"></script>
 		<script type="text/javascript" src="{{ url_for('static',filename='js/fetcher.js') }}"></script>
 		<script type="text/javascript" src="{{ url_for('static',filename='js/map.js') }}"></script>
-		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" type="text/css" href="https://unpkg.com/chimeracss/build/chimera.css"/>
 	</head>
@@ -279,6 +278,17 @@
 								<h4>Arrêté en cours du <b id="du"></b> au <b id="au"></b></h4>
 								<a id="current-arrete">Voir l'arrêté</a>
 							</div>
+							<div id="div-ongoing-arrete-attrap">
+								<h4>Dernier arrêté sur sur https://attrap.fr/ :</h4>
+								<span id="attrap-date"></span>	
+								<h5>
+									<a id="attrap-arrete" style="color: black;">Voir l'arrêté sur attrap</a>
+								</h5>
+								<h5>
+									<a id="attrap-arrete-pdf" style="color: black;">Voir le pdf</a>
+								</h5>
+								<div id="attrap-arrete-content" style="color: black;"></div>
+							</div>
 						</div>
 						<div>
 							<h3>Ajouter un arrêté</h3>
@@ -355,6 +365,10 @@
 	#div-ongoing-arrete{
 		display: none;
 	}
+	#div-ongoing-arrete-attrap{
+		display: none;
+	}
+
 	#urls{
 		margin-left: 10px;
 		width: 45%;
